@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:pth="http://www.w3.org/1999/html">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>CSCI5308 - Group Formation Tool</title>
+</head>
+<body class="bodyGridContainer">
+<header class="bodyGridRow headerGridContainer">
+    <h1>CSCI5308 Group Formation Tool</h1>
+</header>
+<div class="container">
+    <div sec:authorize="isAuthenticated()">
+        <h4 th:inline="text">BannerID: [[${#httpServletRequest.remoteUser}]]</h4>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+        <pre>
+
+        </pre>
+    <form th:action="@{/question/questionmanager}">
+        <input type="submit" value="Back"/>
+    </form>
+    <div class="container">
+        <form th:action="@{/question/createQuestionmultiple}" method="post">
+                <input type="text" style="visibility: hidden" name="questiontext" th:value="*{question.text}"></input>
+                <input type="text" style="visibility: hidden" name="questiontitle" th:value="*{question.title}"></input>
+                <input type="hidden" name="questiontypeid" th:value="*{question.typeID}"></input>
+            <table>
+                <thead>
+                <tr>
+                    <td>
+                        Display text
+                    </td>
+                    <td>
+                        Stored As
+                    </td>
+                </tr>
+                </thead>
+                <tbody id="optiontable">
+                <tr>
+                    <td><input type="text" name="displayText" required></td>
+                    <td><input type="number" name="optionNumber" required></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="displayText" required></td>
+                    <td><input type="number" name="optionNumber" required></td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <pre>
+
+            </pre>
+            <button type="button" onclick="myFunction()">more answers</button>
+            <pre>
+
+            </pre>
+            <input type="submit" value="save">
+            <script>
+                function myFunction() {
+                    var table = document.getElementById("optiontable");
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0)
+                    var cell2 = row.insertCell(1);
+                    cell1.innerHTML = "<input type=\"text\" name=\"displayText\" required>"
+                    cell2.innerHTML = "<input type=\"number\" name=\"optionNumber\" required>";
+                }
+            </script>
+        </form>
+    </div>
+    </div>
+</div>
+</body>
+</html>

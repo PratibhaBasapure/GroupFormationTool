@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>CSCI5308 - Group Formation Tool</title>
+    <script>
+        $(document).ready(function() {
+            $("#questiontype").change(function() {
+                var questionType = $("#questiontype").val();
+                if(questionType ==1 || questionType==4){
+                    console.log("cs");
+                    $("#submitButton").val("Save");
+                }
+                else{
+                    $("#submitButton").val("Next");
+                }
+            });
+        });
+    </script>
+</head>
+<body class="bodyGridContainer">
+<header class="bodyGridRow headerGridContainer">
+    <h1>CSCI5308 Group Formation Tool</h1>
+</header>
+<div class="container">
+        <div sec:authorize="isAuthenticated()">
+            <h4 th:inline="text">BannerID: [[${#httpServletRequest.remoteUser}]]</h4>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+            <pre>
+
+            </pre>
+            <form th:action="@{/question/questionmanagement}">
+                <input type="submit" value="Back"/>
+            </form>
+            <pre>
+
+            </pre>
+        <div class="container">
+            <h2>Basic Question Information</h2>
+            <form th:action="@{/question/createQuestion}" th:object="${question}" method="post">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" th:field="*{title}" style="width: 40%" required> <br>
+                <label for="question">Question:</label>
+                <input type="text" id="question"th:field="*{text}" name="question" style="width: 40%" required><br>
+                <label for="questiontype">Type:</label>
+                <select name="questiontype" id="questiontype" th:field="*{typeID}"/>
+                <option value="0">--Select Question Type--</option>
+                    <option th:each="question : ${questionTypeList}"
+                            th:value="${question.typeID}"
+                            th:text="${question.type}">
+                    </option>
+                    </select>
+                    <br>
+                <pre>
+
+                </pre>
+                <input type="submit" id="submitButton" value="next">
+            </form>
+
+
+        </div>
+        </div>
+</div>
+</body>
+</html>

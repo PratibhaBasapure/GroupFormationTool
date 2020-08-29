@@ -1,0 +1,16 @@
+USE `CSCI5308_1_DEVINT`;
+DROP procedure IF EXISTS `spGroupIDByCourseID`;
+
+DELIMITER $$
+USE `CSCI5308_1_DEVINT`$$
+CREATE DEFINER=`CSCI5308_1_DEVINT_USER`@`%` PROCEDURE `spGroupIDByCourseID`(
+	IN cID VARCHAR(20)
+)
+BEGIN
+	SELECT FormedGroup.id,FormedGroup.createOn
+	FROM FormedGroup
+    WHERE FormedGroup.courseID = cID;
+END$$
+
+DELIMITER ;
+

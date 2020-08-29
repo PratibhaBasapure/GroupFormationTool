@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+	<head>
+		<title>CSCI5308 - Group Formation Tool</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	</head>
+	<body class="bodyGridContainer">
+	<header class="bodyGridRow headerGridContainer">
+		<h1>CSCI5308 Group Formation Tool</h1>
+	</header>
+	<div class="container">
+
+
+	  	<div sec:authorize="isAuthenticated()">
+	       <h4 th:inline="text">BannerID: [[${#httpServletRequest.remoteUser}]]</h4>
+	       <form th:action="@{/logout}" method="post">
+	           <input type="submit" value="Sign Out"/>
+	       </form>
+		</div>
+		<h1 th:text="'Course: ' + ${course.title}">Course: Title Not Found</h1>
+		<div th:if="${instructor} or ${ta}">
+			<br/>
+			<a th:href="@{/course/instructoradmin(id=${course.id})}">Course Administration</a>
+		</div>
+			<pre></pre>
+		<div th:if="${instructor}">
+			<a th:href="@{/question/questionmanagement}"> Question Manager page </a>
+		</div>
+	<div th:if="${instructor}">
+	</br>
+		<a th:href="@{/survey/createsurvey(id=${course.id})}"> Create/Edit Survey </a>
+	</div>
+		<div th:if="${ta}">
+			</br>
+			<a th:href="@{/survey/editsurvey(id=${course.id})}"> Edit Survey </a>
+		</div>
+	<div th:if="${instructor}">
+		</br>
+		<a th:href="@{/survey/publishsurvey(id=${course.id})}"> Publish Survey </a>
+	</div>
+		<div th:if="${instructor}">
+			</br>
+			<a th:href="@{/groupformation/algorithm(id=${course.id})}"> Define Group Formation Algorithm </a>
+		</div>
+		<div th:if="${instructor}">
+			</br>
+			<a th:href="@{/groupformation/runalgorithm(id=${course.id})}"> Form groups by Running algorithm </a>
+		</div>
+		<div th:if="${instructor}">
+			</br>
+			<a th:href="@{/groupformation/groups(id=${course.id})}"> Result groups </a>
+		</div>
+		<div class="container">
+			<h3 th:if="${!issurveynotprovided}"> You have provided youre responses to the survey </h3>
+			<div th:if="${student} and ${issurveynotprovided}">
+				<a th:if="${published}"> Please fill the survey</a>
+				<a th:if="${notPublished}"> Survey is not yet published. Please visit later</a>
+				<form th:action="@{/survey/submitresponse}" method="post">
+					<div th:each="question : ${questionlist}">
+						<input type="hidden" name="questionID" th:value="${question.id}">
+					</div>
+
+				<table>
+					<tbody>
+						<input type="hidden" name="id" th:value="${course.id}"></input>
+						<div th:each="question : ${questionlist}">
+							<tr>
+								<td><div th:text="*{question.text}"> </div></td>
+								<td>
+									<div class="container">
+									<div> <input type="hidden" th:value="*{question.id}"/></div>
+										<div th:if="*{question.typeID == 1}"> <input type="number" required th:name="${'result'+question.id}"/> </div>
+										<div th:if="*{question.typeID == 4}"> <textarea required th:name="${'result'+question.id}"> </textarea> </div>
+									<div th:if="*{question.typeID == 2}">
+										<div class="form-group" name="responses">
+											<label for="questiontype">Select one</label>
+											<select id="questiontype" required th:name="${'option2' + question.id}" />
+											<option value="0">--Select Question Type--</option>
+											<option th:each="choice : ${question.getMultipleChoiceOption()}" th:value="${choice.optionNumber}" th:field="${responses.response}"
+													th:text="${choice.displayText}">
+											</option>
+											</select>
+										</div>
+									</div>
+									<div th:if="*{question.typeID == 3}">
+											<div class="form-group" th:each="choice : ${question.getMultipleChoiceOption()}">
+												<label class="container">
+													<input type="checkbox" th:value="${choice.optionNumber}" th:name="${'result'+ question.id + choice.optionNumber}">
+													<span class="checkmark" th:text="${choice.displayText}" ></span>
+												</label>
+											</div>
+									</div>
+									</div>
+								</td>
+							</tr>
+						</div>
+					<input th:if="${published}" type="submit" value="Submit survey"/>
+					</tbody>
+				</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	</body>
+</html>

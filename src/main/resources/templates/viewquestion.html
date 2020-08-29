@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>CSCI5308 - Group Formation Tool</title>
+
+</head>
+<body class="bodyGridContainer">
+<header class="bodyGridRow headerGridContainer">
+    <h1>CSCI5308 Group Formation Tool</h1>
+</header>
+<div class="container">
+    <div sec:authorize="isAuthenticated()">
+        <h4 th:inline="text">BannerID: [[${#httpServletRequest.remoteUser}]]</h4>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+        <pre>
+
+            </pre>
+        <form th:action="@{/question/questionmanagement}">
+            <input type="submit" value="Back"/>
+        </form>
+        <pre>
+
+        </pre>
+
+        <div class="container">
+            <p>Title <b><a th:text="*{question.title}"> </a></b> </p>
+            <h2 th:text="*{question.text}"> </h2>
+        </div>
+
+        <div th:if="*{question.typeID == 1}">
+            <div class="form-group">
+                <input type="number"/>
+            </div>
+        </div>
+        <div th:if="*{question.typeID == 4}">
+            <div class="form-group">
+                <textarea></textarea>
+            </div>
+        </div>
+        <div th:if="*{question.typeID == 2}">
+            <div class="form-group">
+                <label for="questiontype">Select one</label>
+                <select name="questiontype" id="questiontype" />
+                <option value="0">--Select Question Type--</option>
+                <option th:each="choice : ${choices}"
+                        th:value="${choice.optionNumber}"
+                        th:text="${choice.displayText}">
+                </option>
+                </select>
+            </div>
+        </div>
+        <div th:if="*{question.typeID == 3}">
+            <div class="form-group" th:each="choice : ${choices}">
+                <label class="container">
+                    <input type="checkbox" th:value="${choice.optionNumber}">
+                    <span class="checkmark" th:text="${choice.displayText}" ></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

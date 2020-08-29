@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<title>CSCI5308 - Group Formation Tool</title>
+<style type="text/css">
+table {
+	border-collapse: collapse;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+</style>
+</head>
+<body class="bodyGridContainer">
+	<header class="bodyGridRow headerGridContainer">
+		<h1>CSCI5308 Group Formation Tool</h1>
+	</header>
+	<div class="w3-container">
+		<div sec:authorize="isAuthenticated()">
+			<h4 th:inline="text">BannerID:
+				[[${#httpServletRequest.remoteUser}]]</h4>
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Sign Out" />
+			</form>
+			<pre>
+
+
+        </pre>
+			<form th:action="@{/}">
+				<input type="submit" value="Back" />
+			</form>
+
+			<div class="w3-container">
+				<pre>
+
+            </pre>
+				<a th:href="@{/question/questionmanager}"> Create Questions </a>
+				<pre></pre>
+				<div th:if="${message}" th:text="${message}"
+					th:class="${'alert ' + alertClass}" /></div>
+				<pre></pre>
+				<h2>List of questions</h2>
+				<form method="POST" th:action="@{/question/questionsort}">
+					<label for="sort">Sort</label> <select id="sort" name="sort"
+						onchange="this.form.submit()">
+						<option value="">Select an option</option>
+						<option value="titleDes">Title(Descending)</option>
+						<option value="titleAsc">Title(Ascending)</option>
+						<option value="newToOld">Newest to Oldest</option>
+						<option value="oldToNew">Oldest to Newest</option>
+					</select>
+				</form>
+				<table>
+					<thead>
+						<tr>
+							<th>Question Title</th>
+							<th>Question created on</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="question : ${questionlist}">
+							<td><a th:text="${question.title}"
+								th:href="@{/question/viewquestion(id=${question.id})}"></a></td>
+							<td><a th:text="${question.createdOn}"></a></td>
+							<td>
+								<form method="GET"
+									th:action="@{/question/questiondelete/{questionId}(questionId=${question.id})}"
+									onsubmit="return confirm('Do you really want to delete this question? All responses entered by students will also be deleted.');">
+									<button type="submit" name="submit" value="value"
+										class="btn btn-primary">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<pre>
+            </pre>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

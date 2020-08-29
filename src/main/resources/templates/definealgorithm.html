@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<title>CSCI5308 - Group Formation Tool</title>
+<style type="text/css">
+table {
+	border-collapse: collapse;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+</style>
+</head>
+<body class="bodyGridContainer">
+	<header class="bodyGridRow headerGridContainer">
+		<h1>CSCI5308 Group Formation Tool</h1>
+	</header>
+	<div class="w3-container">
+		<div sec:authorize="isAuthenticated()">
+			<h4 th:inline="text">BannerID:
+				[[${#httpServletRequest.remoteUser}]]</h4>
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Sign Out" />
+			</form>
+			<pre>
+
+
+        </pre>
+			<form th:action="@{/}">
+				<input type="submit" value="Back" />
+			</form>
+
+			<pre></pre>
+			<form th:action="@{/groupformation/algorithm}" method="post">
+				<input type="hidden" name="id" th:value="${courseid}"></input> Group
+				Size(2-10) : <input type="number" name="groupSize" min=2 max=10 required>
+				<h2>List of questions</h2>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>Question Title</th>
+							<th>Question Text</th>
+							<th>Question Type</th>
+							<th>Question Created on</th>
+							<th>Comparison Type</th>
+							<th>Define Weight(0-100)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="question : ${questionlist}">
+							<td><input type="hidden" name="questionid"
+								th:value="${question.id}" /></td>
+							<td><a th:text="${question.title}"></a></td>
+							<td><a th:text="${question.text}"></a></td>
+							<td><a th:text="${question.type}"></a></td>
+							<td><a th:text="${question.createdOn}"></a></td>
+							<td><input type="radio" id="optionsRadios1"
+								th:name="comparisonChoice+${question.id}" th:value="1">Similar</input>
+								<input type="radio" id="optionsRadios2"
+								th:name="comparisonChoice+${question.id}" th:value="0">Dissimilar</input>
+							</td>
+							<td><input type="number" min=0 max=100 name="weight"
+								required></td>
+						</tr>
+					</tbody>
+				</table>
+				<br> <input type="submit" id="submitButton"
+					value="Save Algorithm">
+			</form>
+		</div>
+	</div>
+	</div>
+</body>
+</html>
